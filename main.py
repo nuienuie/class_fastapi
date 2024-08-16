@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, Response, status
+from fastapi import FastAPI, Depends, Response, status, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
@@ -37,4 +37,4 @@ def login(data: login_data = Depends()):
         else:
             return 'password_error'
     else:
-        return Response(status_code=status.HTTP_403_FORBIDDEN, content='denied')
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='denied')
