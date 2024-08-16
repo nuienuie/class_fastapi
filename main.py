@@ -11,3 +11,12 @@ def test():
 @app.post("/post_test")
 def test():
     return {"Hello": "post"}
+
+
+@app.get('/login/{id}/{pw}')
+def login(id, pw):
+    data = {
+        'id': id,
+        'pw': pw
+    }
+    return data
