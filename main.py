@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
+from typing import Optional
 
 app = FastAPI(docs_url='/v1/docs', redoc_url='/v1/redoc')
 
@@ -17,8 +18,9 @@ def test():
 class login(BaseModel):
     id: str
     pw: str
+    is_guest: Optional[bool] = False
 
 
 @app.post('/login')
-def login(data: login = Depends()):
+def login(data: dict = Depends(login)):
     return data
