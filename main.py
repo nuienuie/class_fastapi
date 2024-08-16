@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from pydantic import BaseModel
 
 app = FastAPI(docs_url='/v1/docs', redoc_url='/v1/redoc')
 
@@ -13,10 +14,11 @@ def test():
     return {"Hello": "post"}
 
 
-@app.get('/login/{id}/{pw}')
-def login(id, pw):
-    data = {
-        'id': id,
-        'pw': pw
-    }
+class login(BaseModel):
+    id: str
+    pw: str
+
+
+@app.post('/login')
+def login(data: login = Depends()):
     return data
