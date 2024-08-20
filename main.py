@@ -1,6 +1,8 @@
+import json
 from fastapi import FastAPI, Depends, Response, status, HTTPException
 from pydantic import BaseModel
 from typing import Optional
+from connection import Connection
 
 app = FastAPI(docs_url='/v1/docs', redoc_url='/v1/redoc')
 
@@ -38,3 +40,18 @@ def login(data: login_data = Depends()):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='password_error')
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='denied')
+
+
+@app.post('/get_expensive_fruit', status_code=status.HTTP_200_OK)
+def get_expensive_fruit():
+    db_con = Connection()
+    sql = '''
+    select name
+    from fruit
+    where price = (
+        select max(price) 
+        from fruit
+    );
+    '''
+    result = db_con.execute(sql)
+    return Response(status_code=status.HTTP_200_OK, content=json.dumps(result[0]))
